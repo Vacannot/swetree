@@ -1,0 +1,31 @@
+.sign {
+  display: flex;
+  background-image: url("../../public/static/images/sign.png");
+  background-size: auto;
+  background-repeat: no-repeat;
+  height: 356px;
+  flex-direction: column;
+  width: 324px;
+  flex-shrink: 0;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  color: black;
+  justify-content: center;
+}
+
+.header {
+  text-align: center;
+  font-size: 36px;
+}
+
+.upcoming {
+  padding-top: 10px;
+  text-align: right;
+  padding-right: 13px;
+  font-size: 20px;
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
