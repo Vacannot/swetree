@@ -1,10 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.scss";
-import Upcoming from "@/components/Upcoming";
-import Stats from "@/components/Stats";
-const inter = Inter({ subsets: ["latin"] });
+import Playground from "./playground";
 
 export default function Home() {
   return (
@@ -22,17 +18,7 @@ export default function Home() {
         />
       </Head>
       <main className={styles.main}>
-        <div className={styles.playground}>
-          <Stats />
-          <div className={styles.center}>
-            <header className={styles.header}>
-              Swe<span className={styles.green}>Tree</span>
-            </header>
-            <div className="englishword"> airplane</div>
-          </div>
-
-          <Upcoming />
-        </div>
+        <Playground />
       </main>
     </>
   );

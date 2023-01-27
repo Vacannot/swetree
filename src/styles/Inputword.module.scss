@@ -1,0 +1,19 @@
+.displayword {
+  width: 476px;
+  height: 54px;
+
+  background: rgba(0, 0, 0, 0.25);
+  border: 3px solid #0c5900;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  line-height: 39px;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

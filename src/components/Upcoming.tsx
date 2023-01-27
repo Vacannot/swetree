@@ -1,26 +1,21 @@
 import styles from "@/styles/Upcoming.module.scss";
 import React, { useState } from "react";
-import englishwords from "../../public/static/correctenglishwords.json";
 
-const Upcoming: React.FC = () => {
-  const [wordList, setWordList] = useState(englishwords);
+interface UpcomingProps {
+  englishwords: Array<Array<string>>;
+}
 
-  const removeTopWord = () => {
-    const updatedWordList = [...wordList];
-    updatedWordList.shift();
-    setWordList(updatedWordList);
-  };
-
+const Upcoming: React.FC<UpcomingProps> = ({ englishwords }) => {
+  /*   englishwords.shift(); */
   return (
     <div className={styles.sign}>
       <div className={styles.header}>Upcoming Words</div>
       <div className={styles.upcoming} id="upcoming">
-        {wordList.map((word, index) => (
+        {englishwords.map((word, index) => (
           <div key={index}>{word}</div>
         ))}
       </div>
     </div>
   );
 };
-
 export default Upcoming;
