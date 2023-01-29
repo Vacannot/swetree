@@ -1,12 +1,15 @@
 import styles from "@/styles/Upcoming.module.scss";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface UpcomingProps {
   englishwords: Array<Array<string>>;
 }
 
 const Upcoming: React.FC<UpcomingProps> = ({ englishwords }) => {
-  /*   englishwords.shift(); */
+  /*   useEffect(() => {
+    englishwords.shift();
+  }, []); */
+
   return (
     <div className={styles.sign}>
       <div className={styles.header}>Upcoming Words</div>

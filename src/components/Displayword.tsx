@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/styles/Displayword.module.scss";
+import styles from "@/styles/DisplayWord.module.scss";
 
 interface DisplayWordProps {
   topWord: string;
