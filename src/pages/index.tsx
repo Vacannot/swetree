@@ -23,3 +23,21 @@ export default function Home() {
     </>
   );
 }
+
+/* const result = characters.filter(
+  (char) => !swedishWordCharacters.includes(char)
+);
+
+// get rätt svar även om bokstäverna inte är i rätt ordning.
+
+switch (result.length) {
+  case 0:
+    correctLetters = true;
+    break;
+  default:
+    console.log(
+      "sorry you didn't spell it right but you used all the correct letters!"
+    );
+    break;
+}
+ */

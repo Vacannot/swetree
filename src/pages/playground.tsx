@@ -23,6 +23,10 @@ const Playground = () => {
     characters: Array<string>,
     swedishWords: Array<Array<string>>
   ) => {
+    let correctSpelling = false;
+    let correctLetters = false;
+    let misaligned = [];
+
     const swedishWordCharacters = swedishWords[0][0].split("");
     console.log(swedishWordCharacters + " this is the answer");
 
@@ -33,19 +37,25 @@ const Playground = () => {
       return console.log("there is no answer or it's incorrect length");
     }
 
-    const result = characters.filter(
-      (char) => !swedishWordCharacters.includes(char)
-    );
-
-    switch (result.length) {
-      case 0:
-        console.log("congratulations!");
-        removeTopWord();
-        break;
-      default:
-        console.log("fail");
-        break;
+    for (let i = 0; i < characters.length; i++) {
+      if (characters[i] !== swedishWordCharacters[i]) {
+        let correctIndex = swedishWordCharacters.indexOf(characters[i]);
+        misaligned.push({
+          character: characters[i],
+          originalIndex: i,
+          correctIndex,
+        });
+      }
     }
+
+    if (misaligned.length == 0) {
+      removeTopWord();
+    }
+
+    return misaligned;
+
+    /*     return (misaligned.sort((a, b) => a.correctIndex - b.correctIndex)); */
+    /*     console.log(misaligned.map(({ character }) => character)); */
   };
 
   const removeTopWord = () => {
@@ -69,7 +79,7 @@ const Playground = () => {
               {/*               <button onClick={removeTopWord}>remove top word in list</button> */}
             </header>
             <DisplayWord topWord={englishWordList[0][0]} />
-            <InputWord onSubmit={handleSubmit} />
+            <InputWord onSubmit={handleSubmit} correction={{ misaligned }} />
           </div>
 
           <Upcoming englishwords={englishWordList} />

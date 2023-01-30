@@ -4,9 +4,10 @@ import { useState } from "react";
 
 interface MyFormProps {
   onSubmit: (value: string) => void;
+  correction: Array<string>;
 }
 
-const InputWord: React.FC<MyFormProps> = ({ onSubmit }) => {
+const InputWord: React.FC<MyFormProps> = ({ onSubmit, correction }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +27,12 @@ const InputWord: React.FC<MyFormProps> = ({ onSubmit }) => {
           onChange={(event) => setInputValue(event.target.value)}
         />
       </form>
-      <div>This is where text shows up when you answer!</div>
+      <div>
+        {" "}
+        {correction.map((word, index) => (
+          <div key={index}>{word}</div>
+        ))}
+      </div>
     </div>
   );
 };
