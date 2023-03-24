@@ -4,7 +4,11 @@ import { useState } from "react";
 
 interface MyFormProps {
   onSubmit: (value: string) => void;
-  correction: Array<string>;
+  correction: {
+    character: string;
+    originalIndex: number;
+    correctIndex: number;
+  }[];
 }
 
 const InputWord: React.FC<MyFormProps> = ({ onSubmit, correction }) => {
@@ -28,9 +32,16 @@ const InputWord: React.FC<MyFormProps> = ({ onSubmit, correction }) => {
         />
       </form>
       <div>
-        {" "}
-        {correction.map((word, index) => (
-          <div key={index}>{word}</div>
+        {correction.map((item) => (
+          <>
+            <span className={styles.misaligned}>
+              {item.character}
+              {item.correctIndex}
+              {item.originalIndex}
+            </span>
+          </>
+
+          // do expected word and actual word istead of compare
         ))}
       </div>
     </div>

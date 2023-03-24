@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.scss";
-import Playground from "./playground";
+import SweTree from "./playground";
 
 export default function Home() {
   return (
@@ -12,32 +12,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <main className={styles.main}>
-        <Playground />
+        <SweTree />
       </main>
     </>
   );
 }
-
-/* const result = characters.filter(
-  (char) => !swedishWordCharacters.includes(char)
-);
-
-// get rätt svar även om bokstäverna inte är i rätt ordning.
-
-switch (result.length) {
-  case 0:
-    correctLetters = true;
-    break;
-  default:
-    console.log(
-      "sorry you didn't spell it right but you used all the correct letters!"
-    );
-    break;
-}
- */
