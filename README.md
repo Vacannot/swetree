@@ -1,38 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+<img alt="YOUR-ALT-TEXT" src="/static/images/medium.png" width="59px" align="left" style="padding-right: 40px">
 
-## Getting Started
+## Hi, this is SweTree
 
-First, run the development server:
+> SweTree is a small project that I created for fun. It's a web application that allows users to learn Swedish whilst growing trees and watching different statistics increase! The application features over 800 hand-translated common Swedish words with translations that make sense. I hope you will enjoy testing our using the site!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+> If you're interested in more of my work and who I am feel free to check out my GitHub or LinkedIn, both can be found from my profile!
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+> SweTree is built using a number of different technologies, including NEXT.js, React, and TypeScript. It's hosted on the Vercel platform, which makes deployment a breeze.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> While I'm happy with how SweTree turned out, there's always room for improvement. In the future, I'd like to increase the amount of words that is possible to learn and further develop the spelling / misspelling system to give the user more feedback when typing correctly or incorrectly.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+> If you have any suggestions or feedback for how I can improve SweTree, please don't hesitate to reach out. I'm always looking for ways to make the app better and more useful for people who might be interested.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+</p>

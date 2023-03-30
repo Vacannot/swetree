@@ -231,6 +231,9 @@ const SweTree = () => {
           )}
         </div>
         <div className={styles.credits}>
+          <p>
+            <a href="https://github.com/Vacannot/swetree">github</a>
+          </p>
           <p> Made with love by Simon for my Star {"<"}3 </p>
         </div>
       </main>
