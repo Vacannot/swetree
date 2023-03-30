@@ -5,11 +5,9 @@ import DisplayWord from "@/components/Displayword";
 import InputWord from "@/components/Inputword";
 import EnglishWordList from "../../public/static/correctenglishwords.json";
 import SwedishWordList from "../../public/static/correctswedishwords.json";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 const SweTree = () => {
-  const originalEnglishWordList = EnglishWordList;
-  const originalSwedishWordList = SwedishWordList;
   const [englishWordList, setEnglishWordList] = useState(EnglishWordList);
   const [swedishWordList, setSwedishWordList] = useState(SwedishWordList);
   const [userStats, setUserStats] = useState({
@@ -22,11 +20,12 @@ const SweTree = () => {
     regrow: 0,
   });
   const [formValue, setFormValue] = useState("");
-  const [misaligned, setMisaligned] = useState<
-    { character: string; originalIndex: number; correctIndex: number }[]
-  >([]);
   const [treeDisplay, setTreeDisplay] = useState("");
   const [levelingUp, setLevelingUp] = useState(false);
+  const [showCorrect, setShowCorrect] = useState<boolean | undefined>(
+    undefined
+  );
+  const [previousWord, setPreviousWord] = useState("");
 
   const handleSubmit = (UserAttempt: string) => {
     setFormValue(UserAttempt);
@@ -39,14 +38,11 @@ const SweTree = () => {
     characters: Array<string>,
     swedishWords: Array<Array<string>>
   ) => {
-    let correctSpelling = false;
-    let correctLetters = false;
-    let misaligned = [];
     let stringGiven = characters.join("");
+    setPreviousWord(swedishWords[0][0]);
 
-    //checks if the given answer is wrong, if it's not proceed move it doen the list and then proceed to the next word.
     if (stringGiven !== swedishWords[0][0]) {
-      correctSpelling = false;
+      setShowCorrect(true);
 
       const newPosition = Math.min(5, swedishWords.length);
       let updatedEnglishWordList = [...englishWordList];
@@ -63,6 +59,7 @@ const SweTree = () => {
       setEnglishWordList(updatedEnglishWordList);
       setSwedishWordList(updatedSwedishWordList);
     } else {
+      setShowCorrect(false);
       setUserStats((prevState) => ({
         ...prevState,
         totalWords: prevState.totalWords + 1,
@@ -77,72 +74,57 @@ const SweTree = () => {
       updatedSwedishWordList.shift();
       setSwedishWordList(updatedSwedishWordList);
     }
-
-    const swedishWordCharacters = swedishWords[0][0].split("");
-
-    for (let i = 0; i < characters.length; i++) {
-      if (characters[i] !== swedishWordCharacters[i]) {
-        let correctIndex = swedishWordCharacters.indexOf(characters[i]);
-        misaligned.push({
-          character: characters[i],
-          originalIndex: i,
-          correctIndex,
-        });
-      }
-    }
-
-    /*     console.log(misaligned.map(({ character }) => character));
-    console.log(misaligned.sort((a, b) => a.correctIndex - b.correctIndex)); */
-    setMisaligned(misaligned);
-    /*     return (misaligned.sort((a, b) => a.correctIndex - b.correctIndex)); */
   };
 
-  const calculateStats = useCallback(
-    (userStats: {
-      currentProgress: number;
-      level: number;
-      waterGain: number;
-      levelReqXp: number;
-      totalWords: number;
-    }) => {
-      let nextWaterGain: number;
-      let nextLevelReqXp: number;
+  const calculateStats = useMemo(
+    () =>
+      (userStats: {
+        currentProgress: number;
+        level: number;
+        waterGain: number;
+        levelReqXp: number;
+        totalWords: number;
+        regrow: number;
+      }) => {
+        let nextWaterGain: number;
+        let nextLevelReqXp: number;
 
-      if (userStats.currentProgress >= userStats.levelReqXp && !levelingUp) {
-        setLevelingUp(true);
-        setTimeout(() => {
-          setUserStats((prevState) => ({
-            ...prevState,
-            level: prevState.level + 1,
-          }));
-          nextWaterGain = Math.round((userStats.waterGain *= 2));
-          nextLevelReqXp = Math.round((userStats.levelReqXp *= 2.2));
+        if (userStats.currentProgress >= userStats.levelReqXp && !levelingUp) {
+          setLevelingUp(true);
+          setTimeout(() => {
+            setUserStats((prevState) => ({
+              ...prevState,
+              level: prevState.level + 1,
+            }));
+            nextWaterGain = Math.round((userStats.waterGain *= 2));
+            nextLevelReqXp = Math.round((userStats.levelReqXp *= 2.2));
 
-          setUserStats((prevState) => ({
-            ...prevState,
-            currentProgress: 0,
-            waterGain: nextWaterGain,
-            levelReqXp: nextLevelReqXp,
-          }));
-          setLevelingUp(false);
-        }, 100);
-      }
+            setUserStats((prevState) => ({
+              ...prevState,
+              currentProgress: 0,
+              waterGain: nextWaterGain,
+              levelReqXp: nextLevelReqXp,
+            }));
+            setLevelingUp(false);
+          }, 100);
+        }
 
-      setUserStats((prevState) => ({
-        ...prevState,
-        planted: Math.floor(userStats.totalWords / 30),
-      }));
-
-      if (userStats.totalWords >= swedishWordList.length) {
-        setSwedishWordList([...SwedishWordList]);
-        setEnglishWordList([...EnglishWordList]);
         setUserStats((prevState) => ({
           ...prevState,
-          regrow: prevState.regrow + 1,
-          totalWords: 0,
+          planted: Math.floor(userStats.totalWords / 30),
         }));
-      }
-    },
+
+        if (userStats.totalWords >= swedishWordList.length) {
+          setSwedishWordList([...SwedishWordList]);
+          setEnglishWordList([...EnglishWordList]);
+          setUserStats((prevState) => ({
+            ...prevState,
+            regrow: prevState.regrow + 1,
+            totalWords: 0,
+          }));
+        }
+      },
+
     [levelingUp, swedishWordList.length]
   );
 
@@ -157,8 +139,13 @@ const SweTree = () => {
 
   useEffect(() => {
     calculateStats(userStats);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calculateStats]);
+
+  useEffect(() => {
     calculateDisplayTree(userStats);
-  }, [calculateStats, userStats]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calculateDisplayTree, userStats.totalWords]);
 
   return (
     <>
@@ -170,7 +157,11 @@ const SweTree = () => {
               Swe<span className={styles.green}>Tree</span>
             </header>
             <DisplayWord topWord={englishWordList[0][0]} />
-            <InputWord onSubmit={handleSubmit} correction={misaligned} />
+            <InputWord
+              onSubmit={handleSubmit}
+              correctSpelling={previousWord}
+              showCorrect={showCorrect}
+            />
           </div>
           <Upcoming englishwords={englishWordList} />
         </div>

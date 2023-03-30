@@ -1,6 +1,5 @@
 import styles from "@/styles/Stats.module.scss";
 import React from "react";
-import { useState } from "react";
 
 interface IStats {
   stats: {
