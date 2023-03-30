@@ -5,8 +5,8 @@ import DisplayWord from "@/components/Displayword";
 import InputWord from "@/components/Inputword";
 import EnglishWordList from "../../public/static/correctenglishwords.json";
 import SwedishWordList from "../../public/static/correctswedishwords.json";
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, useCallback, useRef } from "react";
+import Image from "next/image";
 const SweTree = () => {
   const originalEnglishWordList = EnglishWordList;
   const originalSwedishWordList = SwedishWordList;
@@ -25,6 +25,8 @@ const SweTree = () => {
   const [misaligned, setMisaligned] = useState<
     { character: string; originalIndex: number; correctIndex: number }[]
   >([]);
+  const [treeDisplay, setTreeDisplay] = useState("");
+  const [levelingUp, setLevelingUp] = useState(false);
 
   const handleSubmit = (UserAttempt: string) => {
     setFormValue(UserAttempt);
@@ -42,9 +44,24 @@ const SweTree = () => {
     let misaligned = [];
     let stringGiven = characters.join("");
 
-    //checks if the given answer is wrong, if it's not proceed to the next word.
+    //checks if the given answer is wrong, if it's not proceed move it doen the list and then proceed to the next word.
     if (stringGiven !== swedishWords[0][0]) {
       correctSpelling = false;
+
+      const newPosition = Math.min(5, swedishWords.length);
+      let updatedEnglishWordList = [...englishWordList];
+      let updatedSwedishWordList = [...swedishWordList];
+
+      const englishWordToMove = updatedEnglishWordList.shift();
+      const swedishWordToMove = updatedSwedishWordList.shift();
+
+      if (englishWordToMove && swedishWordToMove) {
+        updatedEnglishWordList.splice(newPosition, 0, englishWordToMove);
+        updatedSwedishWordList.splice(newPosition, 0, swedishWordToMove);
+      }
+
+      setEnglishWordList(updatedEnglishWordList);
+      setSwedishWordList(updatedSwedishWordList);
     } else {
       setUserStats((prevState) => ({
         ...prevState,
@@ -79,53 +96,69 @@ const SweTree = () => {
     setMisaligned(misaligned);
     /*     return (misaligned.sort((a, b) => a.correctIndex - b.correctIndex)); */
   };
-  useEffect(() => {
-    calculateStats(userStats);
-  }, [userStats.currentProgress]);
 
-  const calculateStats = (userStats: {
-    currentProgress: number;
-    level: number;
-    waterGain: number;
-    levelReqXp: number;
-    totalWords: number;
-  }) => {
-    let nextWaterGain: number;
-    let nextLevelReqXp: number;
+  const calculateStats = useCallback(
+    (userStats: {
+      currentProgress: number;
+      level: number;
+      waterGain: number;
+      levelReqXp: number;
+      totalWords: number;
+    }) => {
+      let nextWaterGain: number;
+      let nextLevelReqXp: number;
 
-    if (userStats.currentProgress >= userStats.levelReqXp) {
-      setTimeout(() => {
-        setUserStats((prevState) => ({
-          ...prevState,
-          level: prevState.level + 1,
-        }));
-        nextWaterGain = Math.round((userStats.waterGain *= 2));
-        nextLevelReqXp = Math.round((userStats.levelReqXp *= 2.2));
+      if (userStats.currentProgress >= userStats.levelReqXp && !levelingUp) {
+        setLevelingUp(true);
+        setTimeout(() => {
+          setUserStats((prevState) => ({
+            ...prevState,
+            level: prevState.level + 1,
+          }));
+          nextWaterGain = Math.round((userStats.waterGain *= 2));
+          nextLevelReqXp = Math.round((userStats.levelReqXp *= 2.2));
 
-        setUserStats((prevState) => ({
-          ...prevState,
-          currentProgress: 0,
-          waterGain: nextWaterGain,
-          levelReqXp: nextLevelReqXp,
-        }));
-      }, 100);
-    }
+          setUserStats((prevState) => ({
+            ...prevState,
+            currentProgress: 0,
+            waterGain: nextWaterGain,
+            levelReqXp: nextLevelReqXp,
+          }));
+          setLevelingUp(false);
+        }, 100);
+      }
 
-    setUserStats((prevState) => ({
-      ...prevState,
-      planted: Math.floor(userStats.totalWords / 24),
-    }));
-
-    if (userStats.totalWords >= swedishWordList.length) {
-      setSwedishWordList([...SwedishWordList]);
-      setEnglishWordList([...EnglishWordList]);
       setUserStats((prevState) => ({
         ...prevState,
-        regrow: prevState.regrow + 1,
-        totalWords: 0,
+        planted: Math.floor(userStats.totalWords / 30),
       }));
-    }
+
+      if (userStats.totalWords >= swedishWordList.length) {
+        setSwedishWordList([...SwedishWordList]);
+        setEnglishWordList([...EnglishWordList]);
+        setUserStats((prevState) => ({
+          ...prevState,
+          regrow: prevState.regrow + 1,
+          totalWords: 0,
+        }));
+      }
+    },
+    [levelingUp, swedishWordList.length]
+  );
+
+  const calculateDisplayTree = (userStats: { totalWords: number }) => {
+    const treeSizes = ["tiny", "smol", "small", "medium", "large", "huge"];
+
+    const index = Math.floor(userStats.totalWords / 5) % treeSizes.length;
+    const treeDisplay = treeSizes[index];
+
+    setTreeDisplay(treeDisplay);
   };
+
+  useEffect(() => {
+    calculateStats(userStats);
+    calculateDisplayTree(userStats);
+  }, [calculateStats, userStats]);
 
   return (
     <>
@@ -139,8 +172,72 @@ const SweTree = () => {
             <DisplayWord topWord={englishWordList[0][0]} />
             <InputWord onSubmit={handleSubmit} correction={misaligned} />
           </div>
-
           <Upcoming englishwords={englishWordList} />
+        </div>
+        <div className={styles.treeDiv}>
+          {treeDisplay === "huge" && (
+            <Image
+              id="HugeTree"
+              src="/static/images/huge.png"
+              alt="huge tree"
+              width={48 * 3.1}
+              height={87 * 3.1}
+            />
+          )}
+          {treeDisplay === "large" && (
+            <Image
+              id="LargeTree"
+              src="/static/images/large.png"
+              alt="large tree"
+              width={46 * 3}
+              height={63 * 3}
+            />
+          )}
+          {treeDisplay === "medium" && (
+            <Image
+              id="MediumTree"
+              src="/static/images/medium.png"
+              alt="medium tree"
+              width={24 * 3}
+              height={32 * 3}
+            />
+          )}
+          {treeDisplay === "small" && (
+            <Image
+              id="SmallTree"
+              src="/static/images/small.png"
+              alt="small tree"
+              width={16 * 3.5}
+              height={19 * 3.5}
+            />
+          )}
+          {treeDisplay === "smol" && (
+            <Image
+              id="SmolTree"
+              src="/static/images/smol.png"
+              alt="smol tree"
+              width={16 * 3}
+              height={13 * 3}
+            />
+          )}
+          {treeDisplay === "tiny" && (
+            <Image
+              id="TinyTree"
+              src="/static/images/tiny.png"
+              alt="tiny tree"
+              width={7 * 3}
+              height={6 * 3}
+            />
+          )}
+          {treeDisplay === "trunk" && (
+            <Image
+              id="TrunkTree"
+              src="/static/images/trunk.png"
+              alt="trunk tree"
+              width={200 / 4}
+              height={200 / 4}
+            />
+          )}
         </div>
         <div className={styles.credits}>
           <p> Made with love by Simon for my Star {"<"}3 </p>
