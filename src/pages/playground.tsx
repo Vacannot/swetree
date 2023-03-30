@@ -114,7 +114,7 @@ const SweTree = () => {
           planted: Math.floor(userStats.totalWords / 30),
         }));
 
-        if (userStats.totalWords >= swedishWordList.length) {
+        if (swedishWordList.length === 0 && englishWordList.length === 0) {
           setSwedishWordList([...SwedishWordList]);
           setEnglishWordList([...EnglishWordList]);
           setUserStats((prevState) => ({
@@ -125,7 +125,7 @@ const SweTree = () => {
         }
       },
 
-    [levelingUp, swedishWordList.length]
+    [englishWordList.length, levelingUp, swedishWordList.length]
   );
 
   const calculateDisplayTree = (userStats: { totalWords: number }) => {
