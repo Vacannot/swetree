@@ -1,5 +1,5 @@
 <p align="center">
-<img alt="YOUR-ALT-TEXT" src="/static/images/medium.png" width="59px" align="left" style="padding-right: 40px">
+<img alt="YOUR-ALT-TEXT" src="./public/static/images/medium.png" width="59px" align="left" style="padding-right: 40px">
 
 ## Hi, this is SweTree
 
