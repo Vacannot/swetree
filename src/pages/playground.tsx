@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState } from "react";
 
 import EnglishWordList from "../../public/static/correctenglishwords.json";
 import SwedishWordList from "../../public/static/correctswedishwords.json";
@@ -12,12 +12,23 @@ import DisplayTree from "@/components/DisplayTree";
 import useDisplayTree from "@/hooks/useDisplayTree";
 
 import styles from "@/styles/Home.module.scss";
-import useCalculateStats from "@/hooks/useStats";
+import useCalculateStats from "@/hooks/useCalculateStats";
+import useCompareAnswers from "@/hooks/useCompareAnswer";
+
+interface UserStats {
+  currentProgress: number;
+  level: number;
+  levelReqXp: number;
+  waterGain: number;
+  totalWords: number;
+  planted: number;
+  regrow: number;
+}
 
 const SweTree = () => {
   const [englishWordList, setEnglishWordList] = useState(EnglishWordList);
   const [swedishWordList, setSwedishWordList] = useState(SwedishWordList);
-  const [userStats, setUserStats] = useState({
+  const [userStats, setUserStats] = useState<UserStats>({
     currentProgress: 0,
     level: 1,
     levelReqXp: 10,
@@ -40,55 +51,21 @@ const SweTree = () => {
     compareAnswer(answerCharacters, swedishWordList);
   };
 
-  const compareAnswer = (
-    characters: Array<string>,
-    swedishWords: Array<Array<string>>
-  ) => {
-    let stringGiven = characters.join("");
-    setPreviousWord(swedishWords[0][0]);
-
-    if (stringGiven !== swedishWords[0][0]) {
-      setShowCorrect(true);
-
-      const newPosition = Math.min(5, swedishWords.length);
-      let updatedEnglishWordList = [...englishWordList];
-      let updatedSwedishWordList = [...swedishWordList];
-
-      const englishWordToMove = updatedEnglishWordList.shift();
-      const swedishWordToMove = updatedSwedishWordList.shift();
-
-      if (englishWordToMove && swedishWordToMove) {
-        updatedEnglishWordList.splice(newPosition, 0, englishWordToMove);
-        updatedSwedishWordList.splice(newPosition, 0, swedishWordToMove);
-      }
-
-      setEnglishWordList(updatedEnglishWordList);
-      setSwedishWordList(updatedSwedishWordList);
-    } else {
-      setShowCorrect(false);
-      setUserStats((prevState) => ({
-        ...prevState,
-        totalWords: prevState.totalWords + 1,
-        currentProgress: prevState.currentProgress + 1 * prevState.waterGain,
-      }));
-
-      let updatedEnglishWordList = [...englishWordList];
-      updatedEnglishWordList.shift();
-      setEnglishWordList(updatedEnglishWordList);
-
-      let updatedSwedishWordList = [...swedishWordList];
-      updatedSwedishWordList.shift();
-      setSwedishWordList(updatedSwedishWordList);
-    }
-  };
+  const { compareAnswer } = useCompareAnswers({
+    englishWordList,
+    setEnglishWordList,
+    swedishWordList,
+    setSwedishWordList,
+    setUserStats,
+    setShowCorrect,
+    setPreviousWord,
+  });
 
   useCalculateStats(
     userStats,
     setUserStats,
     levelingUp,
     setLevelingUp,
-    englishWordList.length,
-    swedishWordList.length,
     SwedishWordList,
     EnglishWordList,
     setEnglishWordList,

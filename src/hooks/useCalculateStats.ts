@@ -15,8 +15,6 @@ const useCalculateStats = (
   setUserStats: React.Dispatch<React.SetStateAction<UserStats>>,
   levelingUp: boolean,
   setLevelingUp: React.Dispatch<React.SetStateAction<boolean>>,
-  englishWordListLength: number,
-  swedishWordListLength: number,
   SwedishWordList: Array<Array<string>>,
   EnglishWordList: Array<Array<string>>,
   setSwedishWordList: (arg0: string[][]) => void,
