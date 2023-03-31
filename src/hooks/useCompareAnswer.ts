@@ -56,6 +56,7 @@ const useCompareAnswers = ({
     } else {
       setShowCorrect(false);
       setUserStats(
+        // typescript fel, ingen aning hur man fixar
         // @ts-ignore
         (prevState: {
           totalWords: number;
