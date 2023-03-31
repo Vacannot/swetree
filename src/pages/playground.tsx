@@ -12,6 +12,7 @@ import DisplayTree from "@/components/DisplayTree";
 import useDisplayTree from "@/hooks/useDisplayTree";
 
 import styles from "@/styles/Home.module.scss";
+import useCalculateStats from "@/hooks/useStats";
 
 const SweTree = () => {
   const [englishWordList, setEnglishWordList] = useState(EnglishWordList);
@@ -81,64 +82,20 @@ const SweTree = () => {
     }
   };
 
-  const calculateStats = useMemo(
-    () =>
-      (userStats: {
-        currentProgress: number;
-        level: number;
-        waterGain: number;
-        levelReqXp: number;
-        totalWords: number;
-        regrow: number;
-      }) => {
-        let nextWaterGain: number;
-        let nextLevelReqXp: number;
-
-        if (userStats.currentProgress >= userStats.levelReqXp && !levelingUp) {
-          setLevelingUp(true);
-          setTimeout(() => {
-            setUserStats((prevState) => ({
-              ...prevState,
-              level: prevState.level + 1,
-            }));
-            nextWaterGain = Math.round((userStats.waterGain *= 2));
-            nextLevelReqXp = Math.round((userStats.levelReqXp *= 2.2));
-
-            setUserStats((prevState) => ({
-              ...prevState,
-              currentProgress: 0,
-              waterGain: nextWaterGain,
-              levelReqXp: nextLevelReqXp,
-            }));
-            setLevelingUp(false);
-          }, 100);
-        }
-
-        setUserStats((prevState) => ({
-          ...prevState,
-          planted: Math.floor(userStats.totalWords / 30),
-        }));
-
-        if (swedishWordList.length === 0 && englishWordList.length === 0) {
-          setSwedishWordList([...SwedishWordList]);
-          setEnglishWordList([...EnglishWordList]);
-          setUserStats((prevState) => ({
-            ...prevState,
-            regrow: prevState.regrow + 1,
-            totalWords: 0,
-          }));
-        }
-      },
-
-    [englishWordList.length, levelingUp, swedishWordList.length]
+  useCalculateStats(
+    userStats,
+    setUserStats,
+    levelingUp,
+    setLevelingUp,
+    englishWordList.length,
+    swedishWordList.length,
+    SwedishWordList,
+    EnglishWordList,
+    setEnglishWordList,
+    setSwedishWordList
   );
 
   const treeDisplay = useDisplayTree(userStats);
-
-  useEffect(() => {
-    calculateStats(userStats);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calculateStats]);
 
   return (
     <>

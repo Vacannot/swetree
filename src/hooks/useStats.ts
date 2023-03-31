@@ -18,7 +18,9 @@ const useCalculateStats = (
   englishWordListLength: number,
   swedishWordListLength: number,
   SwedishWordList: Array<Array<string>>,
-  EnglishWordList: Array<Array<string>>
+  EnglishWordList: Array<Array<string>>,
+  setSwedishWordList: (arg0: string[][]) => void,
+  setEnglishWordList: (arg0: string[][]) => void
 ) => {
   const calculateStats = useCallback(() => {
     let nextWaterGain: number;
@@ -50,8 +52,8 @@ const useCalculateStats = (
     }));
 
     if (SwedishWordList.length === 0 && EnglishWordList.length === 0) {
-      /*       setSwedishWordList([...SwedishWordList]);
-      setEnglishWordList([...EnglishWordList]); */
+      setSwedishWordList([...SwedishWordList]);
+      setEnglishWordList([...EnglishWordList]);
       setUserStats((prevState) => ({
         ...prevState,
         regrow: prevState.regrow + 1,
@@ -62,7 +64,9 @@ const useCalculateStats = (
     EnglishWordList,
     SwedishWordList,
     levelingUp,
+    setEnglishWordList,
     setLevelingUp,
+    setSwedishWordList,
     setUserStats,
     userStats,
   ]);
