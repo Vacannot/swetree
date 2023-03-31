@@ -56,6 +56,7 @@ const useCompareAnswers = ({
     } else {
       setShowCorrect(false);
       setUserStats(
+        // @ts-ignore
         (prevState: {
           totalWords: number;
           currentProgress: number;
