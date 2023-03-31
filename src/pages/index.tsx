@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.scss";
-import SweTree from "./playground";
+import SweTree from "./SweTree";
 
 export default function Home() {
   return (
