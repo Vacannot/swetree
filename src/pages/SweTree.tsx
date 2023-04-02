@@ -76,7 +76,7 @@ const SweTree = () => {
 
   return (
     <>
-      <main className={styles.main}>
+      <div className={styles.main}>
         <div className={styles.playground}>
           <Stats stats={userStats} />
           <div className={styles.center}>
@@ -99,7 +99,7 @@ const SweTree = () => {
           </p>
           <p> Made with love by Simon for my Star {"<"}3 </p>
         </div>
-      </main>
+      </div>
     </>
   );
 };
