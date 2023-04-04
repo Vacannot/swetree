@@ -48,7 +48,7 @@ const DisplayTree: React.FC<DisplayTreeProps> = ({ treeDisplay }) => {
         <Image
           id="SmolTree"
           src="/static/images/smol.png"
-          alt="smol tree"
+          alt="smoll tree"
           width={16 * 3}
           height={13 * 3}
         />
